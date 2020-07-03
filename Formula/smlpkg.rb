@@ -13,13 +13,15 @@ class Smlpkg < Formula
   end
 
   test do
-    (testpath/"sml.pkg.ok").write <<~EOS
+    expected_pkg = <<~EOS
       package github.com/diku-dk/testpkg
 
       require {
+        github.com/diku-dk/sml-random 0.1.0 #8b329d10b0df570da087f9e15f3c829c9a1d74c2
       }
     EOS
-    system "#{bin}/smlpkg", "init", "github.com/diku-dk/testpkg"
-    assert_equal "", shell_output("diff sml.pkg sml.pkg.ok")
+    system bin/"smlpkg", "init", "github.com/diku-dk/testpkg"
+    system bin/"smlpkg", "add", "github.com/diku-dk/sml-random", "0.1.0"
+    assert_equal expected_pkg, (testpath/"sml.pkg").read
   end
 end
